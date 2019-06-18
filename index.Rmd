@@ -1,0 +1,234 @@
+---
+title: "Introduction to {gt} + {gtsummary} Packages"
+author: "Daniel D. Sjoberg<br/><br/>Memorial Sloan Kettering Cancer Center"
+date: "June 27, 2019"
+output:
+  xaringan::moon_reader:
+    css: [ninjutsu, default, metropolis, metropolis-fonts, "my-theme.css"]
+    lib_dir: libs
+    nature:
+      ratio: 16:9
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+# xaringan::inf_mr()
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+library(tidyverse)
+library(rlang)
+library(knitr)
+set.seed(78987)
+```
+
+
+class: center
+background-image: url(images/gt_logo.png)
+background-size: contain
+
+# {gt} package
+
+---
+# {gt} philosophy
+.large[
+"We can construct a wide variety of useful tables with a cohesive set of table parts. These include the *table header*, the *stub*, the *stub head*, the *column labels*, the *table body*, and the *table footer*."
+]
+<p align="center"><img src="images/gt_parts_of_a_table.png" width=60%></p>
+
+---
+# {gt} examples: the data
+
+.large[In it's basic use, the `gt()` function prints a data frame. But so much more is possible!]
+
+.pull-left[
+```{r, results=FALSE}
+# remotes::install_github("rstudio/gt")
+# remotes::install_github("ddsjoberg/gtsummary")
+library(gt)
+# loading gtsummary for the data
+library(gtsummary)
+gt_trial_head <- head(trial, n = 5) %>%
+  gt() #<<
+```
+```{r, include=FALSE}
+gtsave(gt_trial_head, "images/gt_trial_head.png")
+```
+
+<p align="center"><img src="images/gt_trial_head.png" width=90%></p>
+]
+
+.pull-right[
+```{r, results=FALSE}
+gt_trial_info <- tibble(
+  variable = names(trial),
+  class = map(variable, ~class(trial[[.x]])),
+  label = map(variable, ~attr(trial[[.x]], "label"))
+) %>%
+  gt() #<<
+```
+```{r, include=FALSE}
+gtsave(gt_trial_info, "images/gt_trial_info.png")
+```
+
+<p align="center"><img src="images/gt_trial_info.png" width=60%></p>
+]
+
+---
+# {gt} examples: formatting columns
+
+```{r, results=FALSE}
+trial_summary <- trial %>% group_by(trt) %>% summarise_at(vars(age, marker), mean, na.rm = TRUE)
+```
+
+.pull-left[
+
+### Raw Summary Statistics
+
+```{r, results=FALSE}
+gt_print <- 
+  gt(trial_summary) #<<
+```
+```{r, include=FALSE}
+gtsave(gt_print, "images/gt_print.png")
+```
+
+<p align="center"><img src="images/gt_print.png" width=64%></p>
+]
+
+.pull-right[
+### Formatted Summary Statistics
+
+```{r}
+gt_format <-
+  gt(trial_summary) %>%  #<<
+  fmt_number(columns = vars(age),    #<<
+             decimals = 0) %>%    #<<
+  fmt_number(columns = vars(marker),    #<<
+             decimals = 2)    #<<
+```
+```{r, include=FALSE}
+gtsave(gt_format, "images/gt_format.png")
+```
+
+<img src="images/gt_format.png" width=50%></p>
+]
+
+.bottom[.large[Each column can be formatted without creating a character version of the column!]]
+
+---
+# {gt} examples: formatting cells
+
+```{r, results = FALSE}
+gt_fmt_cell <- trial_summary %>%
+  gather("variable", "mean", -trt) %>%
+  gt() %>%  #<<
+  fmt_number(columns = vars(mean), rows = variable == "age", decimals = 0) %>% #<<
+  fmt_number(columns = vars(mean), rows = variable == "marker", decimals = 2) #<<
+```
+```{r, include=FALSE}
+gtsave(gt_fmt_cell, "images/gt_fmt_cell.png")
+```
+.pull-left[
+<p align="center"><img src="images/gt_fmt_cell.png" width=75%></p>
+]
+
+.pull-right[.large[
+- Use the `rows = ` argument to pinpoint a cell to format.
+
+- There are many formatting functions available: `fmt_percent()`, `fmt_currency()`, `fmt_date()`, `fmt_time()`, `fmt_missing()`, and more.
+
+- You can write your own formatting function and pass is to `fmt()`
+]]
+
+---
+# {gt} examples: grouping data
+
+```{r, results = FALSE}
+gt_group <- trial_summary %>%
+  gather("variable", "mean", -trt) %>%
+  gt(groupname_col = "trt") %>%  #<<
+  fmt_number(columns = vars(mean), rows = variable == "age", decimals = 0) %>% 
+  fmt_number(columns = vars(mean), rows = variable == "marker", decimals = 2)
+```
+```{r, include=FALSE}
+gtsave(gt_group, "images/gt_group.png")
+```
+.pull-left[
+<p align="center"><img src="images/gt_group.png" width=35%></p>
+]
+
+.pull-right[.large[
+- Use the `groupname_col = ` argument to specify a column to group results.
+
+- The grouping column is not printed and a stub row for each group is added.
+]]
+
+---
+# {gt} examples: column formatting
+
+```{r, results = FALSE}
+gt_cols <- trial_summary %>%
+  gt() %>%  
+  fmt_number(columns = vars(age), decimals = 0) %>% 
+  fmt_number(columns = vars(marker), decimals = 2) %>%
+  cols_label(trt = md("**Treatment**"), age = md("**Age**"), marker = md("**Marker**")) %>% #<<
+  tab_spanner(label = "Patient Characteristics",columns = vars(age, marker)) #<<
+```
+```{r, include=FALSE}
+gtsave(gt_cols, "images/gt_cols.png")
+```
+.pull-left[
+<p align="center"><img src="images/gt_cols.png" width=95%></p>
+]
+
+.pull-right[.large[
+- The `cols_label()` function modfies the column headers.
+
+- The `tab_spanner()` function includes a spanning header row.
+
+- The `md()` function interprets input text as Markdown (see also `html()`).
+]]
+
+---
+# {gt} examples: titles & footnotes
+
+```{r, results = FALSE}
+gt_title_footnote <- trial_summary %>%
+  gt() %>%  
+  fmt_number(columns = vars(age), decimals = 0) %>% 
+  fmt_number(columns = vars(marker), decimals = 2) %>%
+  cols_label(trt = md("**Treatment**"), age = md("**Age**"), marker = md("**Marker**")) %>%
+  tab_header(title = "Patient Characteristics", subtitle = "Presented by treatment") %>%  #<<
+  tab_footnote(footnote = "Statistic presented is the mean.",  #<<
+               locations = cells_column_labels(columns = vars(age, marker)))   #<<
+```
+```{r, include=FALSE}
+gtsave(gt_title_footnote, filename = "images/gt_title_footnote.png")
+```
+.pull-left[
+<p align="center"><img src="images/gt_title_footnote.png" width=70%></p>
+]
+
+.pull-right[.large[
+- It's easy to include titles, subtitles, footnotes, and source notes in {gt} tables.
+
+- The footnotes are automatically numbered based on where they appear in the table.
+]]
+
+---
+class: center
+background-image: url(images/gt_functions.svg)
+background-size: contain
+
+# much much more {gt} to learn
+
+---
+class: center
+# {gtsummary}
+
+TRANSITION SLIDE TO {gtsummary}
+
+---
+# {gtsummary} introduction

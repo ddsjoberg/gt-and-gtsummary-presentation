@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Introduction to {gt} + {gtsummary} Packages</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Daniel D. Sjoberg  Memorial Sloan Kettering Cancer Center" />
+    <meta name="date" content="2019-06-27" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to {gt} + {gtsummary} Packages
+### Daniel D. Sjoberg<br/><br/>Memorial Sloan Kettering Cancer Center
+### June 27, 2019
+
+---
+
+
+
+
+
+class: center
+background-image: url(images/gt_logo.png)
+background-size: contain
+
+# {gt} package
+
+---
+# {gt} philosophy
+.large[
+"We can construct a wide variety of useful tables with a cohesive set of table parts. These include the *table header*, the *stub*, the *stub head*, the *column labels*, the *table body*, and the *table footer*."
+]
+&lt;p align="center"&gt;&lt;img src="images/gt_parts_of_a_table.png" width=60%&gt;&lt;/p&gt;
+
+---
+# {gt} examples: the data
+
+.large[In it's basic use, the `gt()` function prints a data frame. But so much more is possible!]
+
+.pull-left[
+
+```r
+# remotes::install_github("rstudio/gt")
+# remotes::install_github("ddsjoberg/gtsummary")
+library(gt)
+# loading gtsummary for the data
+library(gtsummary)
+gt_trial_head &lt;- head(trial, n = 5) %&gt;%
+* gt()
+```
+
+
+&lt;p align="center"&gt;&lt;img src="images/gt_trial_head.png" width=90%&gt;&lt;/p&gt;
+]
+
+.pull-right[
+
+```r
+gt_trial_info &lt;- tibble(
+  variable = names(trial),
+  class = map(variable, ~class(trial[[.x]])),
+  label = map(variable, ~attr(trial[[.x]], "label"))
+) %&gt;%
+* gt()
+```
+
+
+&lt;p align="center"&gt;&lt;img src="images/gt_trial_info.png" width=60%&gt;&lt;/p&gt;
+]
+
+---
+# {gt} examples: formatting columns
+
+
+```r
+trial_summary &lt;- trial %&gt;% group_by(trt) %&gt;% summarise_at(vars(age, marker), mean, na.rm = TRUE)
+```
+
+.pull-left[
+
+### Raw Summary Statistics
+
+
+```r
+gt_print &lt;- 
+* gt(trial_summary)
+```
+
+
+&lt;p align="center"&gt;&lt;img src="images/gt_print.png" width=64%&gt;&lt;/p&gt;
+]
+
+.pull-right[
+### Formatted Summary Statistics
+
+
+```r
+gt_format &lt;-
+* gt(trial_summary) %&gt;%
+* fmt_number(columns = vars(age),
+*            decimals = 0) %&gt;%
+* fmt_number(columns = vars(marker),
+*            decimals = 2)
+```
+
+
+&lt;img src="images/gt_format.png" width=50%&gt;&lt;/p&gt;
+]
+
+.bottom[.large[Each column can be formatted without creating a character version of the column!]]
+
+---
+# {gt} examples: formatting cells
+
+
+```r
+gt_fmt_cell &lt;- trial_summary %&gt;%
+  gather("variable", "mean", -trt) %&gt;%
+* gt() %&gt;%
+* fmt_number(columns = vars(mean), rows = variable == "age", decimals = 0) %&gt;%
+* fmt_number(columns = vars(mean), rows = variable == "marker", decimals = 2)
+```
+
+.pull-left[
+&lt;p align="center"&gt;&lt;img src="images/gt_fmt_cell.png" width=75%&gt;&lt;/p&gt;
+]
+
+.pull-right[.large[
+- Use the `rows = ` argument to pinpoint a cell to format.
+
+- There are many formatting functions available: `fmt_percent()`, `fmt_currency()`, `fmt_date()`, `fmt_time()`, `fmt_missing()`, and more.
+
+- You can write your own formatting function and pass is to `fmt()`
+]]
+
+---
+# {gt} examples: grouping data
+
+
+```r
+gt_group &lt;- trial_summary %&gt;%
+  gather("variable", "mean", -trt) %&gt;%
+* gt(groupname_col = "trt") %&gt;%
+  fmt_number(columns = vars(mean), rows = variable == "age", decimals = 0) %&gt;% 
+  fmt_number(columns = vars(mean), rows = variable == "marker", decimals = 2)
+```
+
+.pull-left[
+&lt;p align="center"&gt;&lt;img src="images/gt_group.png" width=35%&gt;&lt;/p&gt;
+]
+
+.pull-right[.large[
+- Use the `groupname_col = ` argument to specify a column to group results.
+
+- The grouping column is not printed and a stub row for each group is added.
+]]
+
+---
+# {gt} examples: column formatting
+
+
+```r
+gt_cols &lt;- trial_summary %&gt;%
+  gt() %&gt;%  
+  fmt_number(columns = vars(age), decimals = 0) %&gt;% 
+  fmt_number(columns = vars(marker), decimals = 2) %&gt;%
+* cols_label(trt = md("**Treatment**"), age = md("**Age**"), marker = md("**Marker**")) %&gt;%
+* tab_spanner(label = "Patient Characteristics",columns = vars(age, marker))
+```
+
+.pull-left[
+&lt;p align="center"&gt;&lt;img src="images/gt_cols.png" width=95%&gt;&lt;/p&gt;
+]
+
+.pull-right[.large[
+- The `cols_label()` function modfies the column headers.
+
+- The `tab_spanner()` function includes a spanning header row.
+
+- The `md()` function interprets input text as Markdown (see also `html()`).
+]]
+
+---
+# {gt} examples: titles &amp; footnotes
+
+
+```r
+gt_title_footnote &lt;- trial_summary %&gt;%
+  gt() %&gt;%  
+  fmt_number(columns = vars(age), decimals = 0) %&gt;% 
+  fmt_number(columns = vars(marker), decimals = 2) %&gt;%
+  cols_label(trt = md("**Treatment**"), age = md("**Age**"), marker = md("**Marker**")) %&gt;%
+* tab_header(title = "Patient Characteristics", subtitle = "Presented by treatment") %&gt;%
+* tab_footnote(footnote = "Statistic presented is the mean.",
+*              locations = cells_column_labels(columns = vars(age, marker)))
+```
+
+.pull-left[
+&lt;p align="center"&gt;&lt;img src="images/gt_title_footnote.png" width=70%&gt;&lt;/p&gt;
+]
+
+.pull-right[.large[
+- It's easy to include titles, subtitles, footnotes, and source notes in {gt} tables.
+
+- The footnotes are automatically numbered based on where they appear in the table.
+]]
+
+---
+class: center
+background-image: url(images/gt_functions.svg)
+background-size: contain
+
+# much much more {gt} to learn
+
+---
+class: center
+# {gtsummary}
+
+TRANSITION SLIDE TO {gtsummary}
+
+---
+# {gtsummary} introduction
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

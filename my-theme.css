@@ -1,0 +1,42 @@
+.xxlarge { font-size: 170% }
+.xlarge { font-size: 160% }
+.large { font-size: 130% }
+.small { font-size: 70% }
+.tiny { font-size: 40% }
+
+a, a > code {
+  color: #000000; /*default: rgb(249, 38, 114); || sets color of links */
+  text-decoration: none; /* turns off background coloring of links */
+}
+
+/* Two-column layout */
+
+.left-column {
+  color: #777;
+  width: 20%;
+  height: 92%;
+  float: left;
+}
+.left-column h2:last-of-type, .left-column h3:last-child {
+  color: #000;
+}
+
+.right-column {
+  width: 75%;
+  float: right;
+  padding-top: 1em;
+}
+
+.pull-left {
+  float: left;
+  width: 47%;
+}
+
+.pull-right {
+  float: right;
+  width: 47%;
+}
+
+.pull-right ~ * {
+  clear: both;
+}
