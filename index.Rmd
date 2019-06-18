@@ -232,3 +232,266 @@ TRANSITION SLIDE TO {gtsummary}
 
 ---
 # {gtsummary} introduction
+
+```{r, eval=FALSE, include=FALSE}
+DiagrammeR::grViz("digraph flowchart {
+      # node definitions with substituted label text
+      node [fontname = Helvetica, shape = oval, color = grey50]
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      tab4 [label = '@@4']
+
+      # edge definitions with the node IDs
+      tab1 -> tab2 [dir = back];
+      tab1 -> tab3 [dir = back];
+      tab1 -> tab4 [dir = back]
+      }
+
+      [1]: '{biostatR} v1.0 (unreleased)'
+      [2]: '{gtsummary}'
+      [3]: '{mskRutils}'
+      [4]: '{mskRvis}'
+")
+```
+
+<p align="center"><img src="images/biostatR_flow.png" width=70%></p>
+
+.large[
+- {gtsummary} will soon by a part of the biostatR-verse of packages.
+
+- The pacakge uses {gt} as its backend to create tables.
+
+- Used to summarize data frames, regression models, and more.
+
+- Has a tidy API, sensible defaults (meaning minimal code), and is highly customizable.
+]
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.large[Let's review the data once more]
+
+.pull-left[
+<p align="center"><img src="images/gt_trial_info.png" width=90%></p>
+]
+.pull-right[
+.large[For brevity, we'll use an abbreviated version of the trial dataset with few columns.]
+
+```{r}
+sm_trial <-
+  trial %>%
+  select(trt, age, response, grade)
+```
+]
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.pull-left[
+```{r, results = FALSE}
+tbl_summary_1 <-
+  tbl_summary(sm_trial, by = "trt") #<<
+```
+```{r, include=FALSE}
+gtsave(tbl_summary_1 %>% as_gt(), filename = "images/tbl_summary_1.png")
+```
+.large[
+- Default statistics are median (IQR) for continuous variables, and n (percent) for categorical data
+
+- By default, variables coded as 0/1, TRUE/FALSE, and Yes/No are presented dichotomously.
+]
+]
+.pull-right[
+<p align="center"><img src="images/tbl_summary_1.png" width=100%></p>
+]
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.pull-left[
+```{r, results = FALSE}
+tbl_summary_2 <-
+  tbl_summary(sm_trial, by = "trt") %>%
+  add_p() #<<
+```
+```{r, include=FALSE}
+gtsave(tbl_summary_2 %>% as_gt(), filename = "images/tbl_summary_2.png")
+```
+.large[
+- To compare values across two or more groups, use the `add_p()` function.
+
+- The default tests are the Wilcoxon rank-sum test for continuous variables, chi-square test of independence for most categorical data, and Fisher's exact test for categorical data with low expected counts.
+]
+]
+.pull-right[
+<p align="center"><img src="images/tbl_summary_2.png" width=100%></p>
+]
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.pull-left[
+```{r, results = FALSE}
+tbl_summary_3 <- sm_trial %>%
+  tbl_summary(
+    by = "trt",
+    statistic = list( #<<
+      all_continuous() ~ "{mean} ({sd})", #<<
+      all_categorical() ~ "{n} / {N} ({p}%)" #<<
+    ), #<<
+    label = list(vars(age) ~ "Patient Age") #<<
+  ) %>%
+  add_p(test = all_continuous() ~ "t.test") #<<
+```
+```{r, include=FALSE}
+gtsave(tbl_summary_3 %>% as_gt(), filename = "images/tbl_summary_3.png")
+```
+.large[
+- Report mean and standard deviation for continuous variables
+
+- Specify label for age variable
+
+- Report p-values from the t-test
+]
+]
+.pull-right[
+<p align="center"><img src="images/tbl_summary_3.png" width=100%></p>
+]
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.pull-left[
+```{r, results = FALSE}
+tbl_summary_4 <- sm_trial %>%
+  tbl_summary(
+    by = "trt",
+    type = "response" ~ "categorical",  #<<
+    statistic = all_continuous() ~ "{mean} ({sd})",
+    digits = vars(age) ~ c(0, 1)  #<<
+  ) %>%
+  add_p(test = all_continuous() ~ "t.test") %>%
+  add_stat_label()  #<<
+```
+```{r, include=FALSE}
+gtsave(tbl_summary_4 %>% as_gt(), filename = "images/tbl_summary_4.png")
+```
+.large[
+- Report all levels for the response variable
+
+- Modify the default rounding for age
+
+- Add column indicating statistics presented
+]
+]
+.pull-right[
+<p align="center"><img src="images/tbl_summary_4.png" width=100%></p>
+]
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+.large[Advanced Customization
+
+It's natural that a user of the {gtsummary} package would want to customize the aesetics of the table with the many {gt} feautures avialable.  Every function in {gt} is available to use on a {gtsummary} object.
+
+1. Create a {gtsummary} table.
+
+1. Convert the table to a {gt} object with the `as_gt()` function.
+
+1. Continue formatting as a {gt} table using any {gt} function.
+]
+
+---
+# {gtsummary} summarize data with tbl_summary()
+
+
+.pull-left[
+.large[Advanced Customization]
+
+```{r, results = FALSE}
+tbl_summary_5 <- sm_trial %>%
+  tbl_summary(by = "trt") %>%
+  # convert from gtsummary object to gt object
+  as_gt() %>%
+  # modify with gt functions
+  tab_spanner(  #<<
+    label = "Randomization Group",   #<<
+    columns = starts_with("stat_")  #<<
+  )  #<<
+```
+```{r, include=FALSE}
+gtsave(tbl_summary_5, filename = "images/tbl_summary_5.png")
+```
+
+.footnote[More on this in the `tbl_summary()` vignette]
+]
+.pull-right[
+<p align="center"><img src="images/tbl_summary_5.png" width=90%></p>
+]
+---
+# {gtsummary} summarize data with tbl_summary()
+.large[
+Review the tbl_summary vignette for more details
+http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
+]
+
+.pull-left[.large[
+- Reporting any statistic for continuous variables, including user-written functions
+
+- More on dichotomous variables and how to specify the level printed
+
+- Missing data options (e.g. report as a column rather than a row, always report N missing even when no missing data, modify missing text, etc.)
+]]
+.pull.right[.large[.left[
+- Sort categorical variables by frequency
+
+- Report row percent, rather than column percent
+
+- Report q-values from various methods like false discovery rate
+
+- Sort data by ascending p-values when comparisons have been made
+]]]
+
+---
+# {gtsummary} summarize models with tbl_regression()
+.pull-left[.large[
+- `tbl_regression()` accepts regression model objects as inputs
+
+- The backend for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and naturally, the resulting tables are geogeous and customizable.
+
+- Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
+]]
+
+.pull-right[.large[
+- Regression models are summarized and include the reference rows for categorical variables.
+
+- Resulting tables con be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  Tables can also be stacked on top of one another.
+
+- And more!
+]]
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+```{r, results = FALSE}
+tbl_regression_1 <-
+  glm(response ~ trt + grade + age, trial, family = binomial) %>%
+  tbl_regression(
+    label = list("trt" ~ "Treatment", "grade" ~ "Grade", "age" ~ "Age"),
+    exponentiate = TRUE
+  )
+```
+```{r, include=FALSE}
+gtsave(tbl_regression_1 %>% as_gt(), filename = "images/tbl_regression_1.png")
+```
+.large[
+- tbl_regressione xample
+]
+]
+.pull-right[
+<p align="center"><img src="images/tbl_regression_1" width=100%></p>
+]
+
