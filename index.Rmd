@@ -47,7 +47,7 @@ background-size: contain
 
 ???
 
-- package has sets of functions for modifying each pace of a table
+- package has sets of functions for modifying each piece of a table
 
 - we'll review the most common/useful
 ---
