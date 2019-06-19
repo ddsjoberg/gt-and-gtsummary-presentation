@@ -30,6 +30,14 @@ background-size: contain
 
 # {gt} package
 
+???
+- gt is the grammer of graphics
+
+- package from Rstudio
+
+- seeks to create a unifying codebase for HTML, PDF, and RTF otuput
+
+- HTML and PDF are great. RTF is getting close
 ---
 # {gt} philosophy
 .large[
@@ -37,6 +45,11 @@ background-size: contain
 ]
 <p align="center"><img src="images/gt_parts_of_a_table.png" width=60%></p>
 
+???
+
+- package has sets of functions for modifying each peice of a table
+
+- we'll review the most common/useful
 ---
 # {gt} examples: the data
 
@@ -75,6 +88,10 @@ gtsave(gt_trial_info, "images/gt_trial_info.png")
 <p align="center"><img src="images/gt_trial_info.png" width=60%></p>
 ]
 
+???
+- the most common and useful is gt()
+
+- gt() is the first function to run, required everytime
 ---
 # {gt} examples: formatting columns
 
@@ -252,7 +269,7 @@ DiagrammeR::grViz("digraph flowchart {
       [2]: '{gtsummary}'
       [3]: '{mskRutils}'
       [4]: '{mskRvis}'
-")
+") 
 ```
 
 <p align="center"><img src="images/biostatR_flow.png" width=70%></p>
