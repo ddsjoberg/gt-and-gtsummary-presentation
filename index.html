@@ -179,7 +179,7 @@ gt_cols &lt;- trial_summary %&gt;%
 ]
 
 .pull-right[.large[
-- The `cols_label()` function modfies the column headers.
+- The `cols_label()` function modifies the column headers.
 
 - The `tab_spanner()` function includes a spanning header row.
 
@@ -234,7 +234,7 @@ TRANSITION SLIDE TO {gtsummary}
 .large[
 - {gtsummary} will soon by a part of the biostatR-verse of packages.
 
-- The pacakge uses {gt} as its backend to create tables.
+- The package uses {gt} as its back end to create tables.
 
 - Used to summarize data frames, regression models, and more.
 
@@ -250,7 +250,7 @@ TRANSITION SLIDE TO {gtsummary}
 &lt;p align="center"&gt;&lt;img src="images/gt_trial_info.png" width=90%&gt;&lt;/p&gt;
 ]
 .pull-right[
-.large[For brevity, we'll use an abbreviated version of the trial dataset with few columns.]
+.large[For brevity, we'll use an abbreviated version of the trial data set with few columns.]
 
 
 ```r
@@ -365,7 +365,7 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 
 .large[Advanced Customization
 
-It's natural that a user of the {gtsummary} package would want to customize the aesetics of the table with the many {gt} feautures avialable.  Every function in {gt} is available to use on a {gtsummary} object.
+It's natural that a user of the {gtsummary} package would want to customize the aesthetics of the table with the many {gt} features available.  Every function in {gt} is available to use on a {gtsummary} object.
 
 1. Create a {gtsummary} table.
 
@@ -429,7 +429,7 @@ http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 .pull-left[.large[
 - `tbl_regression()` accepts regression model objects as inputs
 
-- The backend for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and naturally, the resulting tables are geogeous and customizable.
+- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and naturally, the resulting tables are gorgeous and customizable.
 
 - Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
 ]]
@@ -437,7 +437,7 @@ http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 .pull-right[.large[
 - Regression models are summarized and include the reference rows for categorical variables.
 
-- Resulting tables con be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  Tables can also be stacked on top of one another.
+- Resulting tables can be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  Tables can also be stacked on top of one another.
 
 - And more!
 ]]
@@ -449,19 +449,162 @@ http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 
 ```r
 tbl_regression_1 &lt;-
-  glm(response ~ trt + grade + age, trial, family = binomial) %&gt;%
-  tbl_regression(
-    label = list("trt" ~ "Treatment", "grade" ~ "Grade", "age" ~ "Age"),
-    exponentiate = TRUE
-  )
+  glm(response ~ trt + grade + age, 
+      data = trial, family = binomial) %&gt;%
+* tbl_regression(exponentiate = TRUE)
 ```
 
 .large[
-- tbl_regressione xample
+- Arguments `exponentiate` and `conf.level` from `tbl_regression()` are passed directly to `broom::tidy()`.
+
+- Logistic regression model with odds ratio header.
+
+- Reference groups added to the table.
 ]
 ]
 .pull-right[
-&lt;p align="center"&gt;&lt;img src="images/tbl_regression_1" width=100%&gt;&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_1.png" width=100%&gt;&lt;/p&gt;
+]
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+
+```r
+tbl_regression_2 &lt;-
+  glm(response ~ trt + grade + age, 
+      data = trial, family = binomial) %&gt;%
+  tbl_regression(exponentiate = TRUE) %&gt;%
+* add_global_p()
+```
+
+.large[
+- Replace individual p-values for categorical variables with global p-value for the entire variable.
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_2.png" width=100%&gt;&lt;/p&gt;
+]
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
+.pull-left[
+
+```r
+library(survival)
+tbl_regression_3 &lt;- 
+  coxph(Surv(ttdeath, death) ~ trt + grade + age, 
+        data = trial) %&gt;%
+  tbl_regression(exponentiate = TRUE)
+tbl_regression_4 &lt;-
+* tbl_merge(
+*   tbls = list(tbl_regression_1,
+*               tbl_regression_3),
+*   tab_spanner = c("Tumor Response", "Time to Death")
+* )
+```
+
+.large[
+- Build Cox regression model with same predictors as previous model
+
+- Merge the two regression models with the same predictors and present results side-by-side
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_4.png" width=100%&gt;&lt;/p&gt;
+]
+
+---
+# {gtsummary} summarize data with tbl_uvregression()
+
+.pull-left[
+
+```r
+library(survival)
+tbl_uvregression_1 &lt;- 
+* tbl_uvregression(
+*   sm_trial,
+*   method = glm,
+*   y = response,
+*   method.args = list(family = binomial),
+*   exponentiate = TRUE
+* )
+```
+
+.large[
+- Table of univariate regression models
+
+- Specify the outcome, and the remaining variables in data frame serve as predictors
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_uvregression_1.png" width=100%&gt;&lt;/p&gt;
+]
+
+---
+# {gtsummary} summarize data with tbl_survival()
+
+.pull-left[
+
+```r
+fit1 &lt;- survfit(Surv(ttdeath, death) ~ trt, 
+                data = trial)
+tbl_survival_1 &lt;-
+* tbl_survival(fit1,
+*              times = c(12, 24),
+*              label = "{time} Month")
+```
+
+.large[
+- First, use `survfit()` to estimate survival times
+
+- Create table of estimates with `tbl_survival()`
+
+- Can use this function to print survival quantiles, e.g. median survival.
+]
+]
+.pull-right[
+&lt;p align="center"&gt;&lt;img src="images/tbl_survival_1.png" width=95%&gt;&lt;/p&gt;
+]
+
+---
+# {gtsummary} reporting results with inline_text()
+.large[
+- Tables are important, but we often need to report results in-line in a report.
+
+- Any statistic reported in a {gtsummary} table can be extracted and reported in-line in a R Markdown document with the `inline_text()` function.
+
+
+```r
+inline_text(tbl_regression_1, variable = "trt", level = "Placebo")
+```
+
+```
+0.52 (95% CI 0.28, 0.94; p=0.032)
+```
+
+- The pattern of what is reported can be modified with the `pattern = ` argument.  Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`
+]
+
+---
+class: center
+# {gtsummary}
+.large[
+• Every function is documented further in the help file •
+
+• Check out the package website for vignettes including detailed examples and explanations •
+
+• Check out the package website for vignettes including detailed examples and explanations •
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gt} package &lt;a href="https://github.com/rstudio/gt"&gt;github.com/rstudio/gt&lt;/a&gt;
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gtsummary} package &lt;a href="https://github.com/ddsjoberg/gtsummary"&gt;github.com/ddsjoberg/gtsummary&lt;/a&gt;
+
+&lt;img src = "images/slide_show_icon.png" width="2.4%" height="2.4%"&gt; slides at &lt;a href="http://www.danieldsjoberg.com/gt-and-gtsummary-presentation"&gt;danieldsjoberg.com/gt-and-gtsummary-presentation&lt;/a&gt;  
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; source code for slides at &lt;a href="https://github.com/ddsjoberg/gt-and-gtsummary-presentation"&gt;github.com/ddsjoberg/gt-and-gtsummary-presentation&lt;/a&gt;
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
