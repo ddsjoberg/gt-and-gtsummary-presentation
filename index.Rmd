@@ -31,11 +31,11 @@ background-size: contain
 # {gt} package
 
 ???
-- gt is the grammer of graphics
+- gt is the grammar of graphics
 
 - package from Rstudio
 
-- seeks to create a unifying codebase for HTML, PDF, and RTF otuput
+- seeks to create a unifying code base for HTML, PDF, and RTF output
 
 - HTML and PDF are great. RTF is getting close
 ---
@@ -47,7 +47,7 @@ background-size: contain
 
 ???
 
-- package has sets of functions for modifying each peice of a table
+- package has sets of functions for modifying each pace of a table
 
 - we'll review the most common/useful
 ---
@@ -91,7 +91,7 @@ gtsave(gt_trial_info, "images/gt_trial_info.png")
 ???
 - the most common and useful is gt()
 
-- gt() is the first function to run, required everytime
+- gt() is the first function to run, required every time
 ---
 # {gt} examples: formatting columns
 
@@ -134,6 +134,15 @@ gtsave(gt_format, "images/gt_format.png")
 
 .bottom[.large[Each column can be formatted without creating a character version of the column!]]
 
+???
+
+- Remember this trial_summary object.  We're using it for the next few slides
+
+- the raw print is not pretty
+
+- we can add formatting, here we format columns with `fmt_number()`
+
+- we don't have to create character versions of our columns!  wonderful!
 ---
 # {gt} examples: formatting cells
 
@@ -158,6 +167,12 @@ gtsave(gt_fmt_cell, "images/gt_fmt_cell.png")
 
 - You can write your own function and pass it to `fmt()` to format a table.
 ]]
+
+???
+
+- the `fmt_number()` function can also used to format a single cell
+
+- lots of formatting functions to choose from
 
 ---
 # {gt} examples: grouping data
@@ -323,6 +338,14 @@ gtsave(tbl_summary_1 %>% as_gt(), filename = "images/tbl_summary_1.png")
 <p align="center"><img src="images/tbl_summary_1.png" width=100%></p>
 ]
 
+???
+
+- just one line of code
+
+- this is how i used the function 95% percent of the time...so easy
+
+- three types of data shown here (explain them)
+
 ---
 # {gtsummary} summarize data with tbl_summary()
 
@@ -344,6 +367,16 @@ gtsave(tbl_summary_2 %>% as_gt(), filename = "images/tbl_summary_2.png")
 .pull-right[
 <p align="center"><img src="images/tbl_summary_2.png" width=100%></p>
 ]
+
+???
+
+- add_p account for another 4% of how I use the function
+
+- explain the test defaults
+
+    - other options
+    - 2 or more groups
+    - random effects for correlated data
 
 ---
 # {gtsummary} summarize data with tbl_summary()
@@ -376,6 +409,17 @@ gtsave(tbl_summary_3 %>% as_gt(), filename = "images/tbl_summary_3.png")
 <p align="center"><img src="images/tbl_summary_3.png" width=100%></p>
 ]
 
+???
+
+- discuss the glue package and how it works and how it's utilized all over {gtsummary}.  Maybe even add a slide about it?
+
+- the defaults are in a word, perfect (for me), but you may want to change them
+
+- statistics can be changed to anything...literally any R function
+
+- discuss the formula notation
+
+- the vignette has examples with more examples
 ---
 # {gtsummary} summarize data with tbl_summary()
 
@@ -405,6 +449,14 @@ gtsave(tbl_summary_4 %>% as_gt(), filename = "images/tbl_summary_4.png")
 .pull-right[
 <p align="center"><img src="images/tbl_summary_4.png" width=100%></p>
 ]
+
+???
+
+- further discuss formula notation
+
+- discuss digits and how it's used
+
+- discuss stat_label, and mention the footnote was omitted
 
 ---
 # {gtsummary} summarize data with tbl_summary()
@@ -448,6 +500,7 @@ gtsave(tbl_summary_5, filename = "images/tbl_summary_5.png")
 <p align="center"><img src="images/tbl_summary_5.png" width=90%></p>
 ]
 ---
+class: left
 # {gtsummary} summarize data with tbl_summary()
 
 .large[
@@ -455,14 +508,14 @@ Review the tbl_summary vignette for more details
 http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 ]
 
-.pull-left[.large[.left[
+.pull-left[.large[
 - Reporting any statistic for continuous variables, including user-written functions.
 
 - More on dichotomous variables and how to specify the level printed.
 
 - Missing data options (e.g. report as a column rather than a row, always report N missing even when no missing data, modify missing text, etc.).
-]]]
-.pull.right[.large[.left[
+]]
+.pull-right[.large[
 - Sort categorical variables by frequency.
 
 - Report row percent, rather than column percent.
@@ -470,14 +523,18 @@ http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 - Report q-values from various methods like false discovery rate.
 
 - Sort data by ascending p-values when comparisons have been made.
-]]]
+]]
+
+???
+
+There is more that we are not covering here
 
 ---
 # {gtsummary} summarize models with tbl_regression()
 .pull-left[.large[
-- `tbl_regression()` accepts regression model objects as inputs.
+- `tbl_regression()` accepts regression model object as inputs.
 
-- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and naturally, the resulting tables are gorgeous and customizable.
+- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and the resulting tables are gorgeous and customizable.
 
 - Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
 ]]
@@ -490,6 +547,11 @@ http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 - Tables can also be stacked on top of one another.
 ]]
 
+???
+
+- build the regression model on your own....we are not in the business of mode estimation or checking
+
+- let's review some examples with code
 ---
 # {gtsummary} summarize models with tbl_regression()
 
@@ -506,7 +568,7 @@ gtsave(tbl_regression_1 %>% as_gt(), filename = "images/tbl_regression_1.png")
 .large[
 - Arguments `exponentiate` and `conf.level` from `tbl_regression()` are passed directly to `broom::tidy()`.
 
-- Logistic regression model with odds ratio header.
+- Logistic regression model with odds ratio header and footnote.
 
 - Reference groups added to the table.
 ]
@@ -514,6 +576,12 @@ gtsave(tbl_regression_1 %>% as_gt(), filename = "images/tbl_regression_1.png")
 .pull-right[
 <p align="center"><img src="images/tbl_regression_1.png" width=100%></p>
 ]
+
+???
+
+- This table is ready for publication!
+
+- That is something no other package I know of can do
 
 ---
 # {gtsummary} summarize models with tbl_regression()
@@ -537,6 +605,10 @@ gtsave(tbl_regression_2 %>% as_gt(), filename = "images/tbl_regression_2.png")
 <p align="center"><img src="images/tbl_regression_2.png" width=100%></p>
 ]
 
+???
+
+Thank you to Stefania for suggesting an improved name change for `add_global_p()`!
+
 ---
 # {gtsummary} summarize models with tbl_regression()
 
@@ -549,8 +621,7 @@ tbl_regression_3 <-
   tbl_regression(exponentiate = TRUE)
 tbl_regression_4 <-
   tbl_merge( #<<
-    tbls = list(tbl_regression_1,  #<<
-                tbl_regression_3), #<<
+    tbls = list(tbl_regression_1, tbl_regression_3), #<<
     tab_spanner = c("Tumor Response", "Time to Death") #<<
   ) #<< 
 ```
@@ -567,6 +638,11 @@ gtsave(tbl_regression_4 %>% as_gt(), filename = "images/tbl_regression_4.png")
 <p align="center"><img src="images/tbl_regression_4.png" width=100%></p>
 ]
 
+???
+
+- side-by-side regression results is common in cancer research (e.g. time to recurrence, then time to death)
+
+- stacking two or more models is also possible
 ---
 # {gtsummary} summarize data with tbl_uvregression()
 
@@ -595,6 +671,10 @@ gtsave(tbl_uvregression_1 %>% as_gt(), filename = "images/tbl_uvregression_1.png
 <p align="center"><img src="images/tbl_uvregression_1.png" width=100%></p>
 ]
 
+???
+
+Tables of univariate results can be good for exploratory analysis
+
 ---
 # {gtsummary} summarize data with tbl_survival()
 
@@ -615,7 +695,7 @@ gtsave(tbl_survival_1 %>% as_gt(), filename = "images/tbl_survival_1.png")
 
 - Create table of estimates with `tbl_survival()`.
 
-- Can use this function to print survival quantiles, e.g. median survival.
+- Can use this function to print survival quantiles as well, e.g. median survival.
 ]
 ]
 .pull-right[
@@ -636,6 +716,17 @@ inline_text(tbl_regression_1, variable = "trt", level = "Placebo")
 - The pattern of what is reported can be modified with the `pattern = ` argument.  Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`.
 ]
 
+???
+
+- discuss importance of reproducible results
+
+- data is constantly updating
+
+- this functionality assures you won't miss updating a reported estimate in a document
+
+- for me, this is one the most powerful parts of the {gtsummary} package
+
+- something I've never seen in another package
 ---
 class: center
 # {gtsummary}
@@ -652,3 +743,37 @@ class: center
 
 <img src = "images/github_icon.png" width="2.4%" height="2.4%"> source code for slides at <a href="https://github.com/ddsjoberg/gt-and-gtsummary-presentation">github.com/ddsjoberg/gt-and-gtsummary-presentation</a>
 ]
+
+???
+
+Go star {gtsummary} on GitHub...we're already to 50+!
+
+---
+# {gtsummary} Advanced
+
+{gtsummary} output is a list that prints as a {gt} table.
+
+```{r}
+names(tbl_summary_1)
+```
+
+.pull-left[
+```{r}
+pluck(tbl_summary_1, "table_body") %>% head()
+```
+]
+.pull-right[
+```{r}
+pluck(tbl_summary_1, "gt_calls") %>% head()
+```
+]
+
+???
+
+If there is time, review the structure of a {gtsummary} object
+
+Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever the object is printed.
+
+Understanding this structure will help you modify if you need.  If there is a {gt} call that formats in a way you don't like, convert your object with `as_gt()` and use the `omit =` argument to leave out the gt call you don't like.
+
+You can replace it with whatever you choose.

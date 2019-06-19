@@ -132,6 +132,15 @@ gt_format &lt;-
 
 .bottom[.large[Each column can be formatted without creating a character version of the column!]]
 
+???
+
+- Remember this trial_summary object.  We're using it for the next few slides
+
+- the raw print is not pretty
+
+- we can add formatting, here we format columns with `fmt_number()`
+
+- we don't have to create character versions of our columns!  wodnerful!
 ---
 # {gt} examples: formatting cells
 
@@ -155,6 +164,12 @@ gt_fmt_cell &lt;- trial_summary %&gt;%
 
 - You can write your own function and pass it to `fmt()` to format a table.
 ]]
+
+???
+
+- the `fmt_number()` function can also used to format a single cell
+
+- lots of formatting functions to choose from
 
 ---
 # {gt} examples: grouping data
@@ -297,6 +312,14 @@ tbl_summary_1 &lt;-
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_1.png" width=100%&gt;&lt;/p&gt;
 ]
 
+???
+
+- just one line of code
+
+- this is how i used the function 95% percent of the time...so easy
+
+- three types of data shown here (explain them)
+
 ---
 # {gtsummary} summarize data with tbl_summary()
 
@@ -317,6 +340,16 @@ tbl_summary_2 &lt;-
 .pull-right[
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_2.png" width=100%&gt;&lt;/p&gt;
 ]
+
+???
+
+- add_p account for another 4% of how I use the function
+
+- explain the test defaults
+
+    - other options
+    - 2 or more groups
+    - random effects for correlated data
 
 ---
 # {gtsummary} summarize data with tbl_summary()
@@ -348,6 +381,17 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_3.png" width=100%&gt;&lt;/p&gt;
 ]
 
+???
+
+- discuss the glue pcakage and how it works and how it's utilized all over {gtsummary}.  Maybe even add a slide about it?
+
+- the defaults are in a word, perfect (for me), but you may want to change them
+
+- statistics can be changed to anything...literally any R function
+
+- discuss the formula notation
+
+- the vignette has examples with more examples
 ---
 # {gtsummary} summarize data with tbl_summary()
 
@@ -376,6 +420,14 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 .pull-right[
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_4.png" width=100%&gt;&lt;/p&gt;
 ]
+
+???
+
+- further discuss formula notation
+
+- discuss digits and how it's used
+
+- discuss stat_label, and mention the footnote was omitted
 
 ---
 # {gtsummary} summarize data with tbl_summary()
@@ -418,6 +470,7 @@ tbl_summary_5 &lt;- sm_trial %&gt;%
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_5.png" width=90%&gt;&lt;/p&gt;
 ]
 ---
+class: left
 # {gtsummary} summarize data with tbl_summary()
 
 .large[
@@ -425,14 +478,14 @@ Review the tbl_summary vignette for more details
 http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 ]
 
-.pull-left[.large[.left[
+.pull-left[.large[
 - Reporting any statistic for continuous variables, including user-written functions.
 
 - More on dichotomous variables and how to specify the level printed.
 
 - Missing data options (e.g. report as a column rather than a row, always report N missing even when no missing data, modify missing text, etc.).
-]]]
-.pull.right[.large[.left[
+]]
+.pull-right[.large[
 - Sort categorical variables by frequency.
 
 - Report row percent, rather than column percent.
@@ -440,14 +493,18 @@ http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 - Report q-values from various methods like false discovery rate.
 
 - Sort data by ascending p-values when comparisons have been made.
-]]]
+]]
+
+???
+
+There is more that we are not covering here
 
 ---
 # {gtsummary} summarize models with tbl_regression()
 .pull-left[.large[
-- `tbl_regression()` accepts regression model objects as inputs.
+- `tbl_regression()` accepts regression model object as inputs.
 
-- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and naturally, the resulting tables are gorgeous and customizable.
+- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and the resulting tables are gorgeous and customizable.
 
 - Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
 ]]
@@ -460,6 +517,11 @@ http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html
 - Tables can also be stacked on top of one another.
 ]]
 
+???
+
+- build the regression model on your own....we are not in the business of mode estimation or checking
+
+- let's review some examples with code
 ---
 # {gtsummary} summarize models with tbl_regression()
 
@@ -475,7 +537,7 @@ tbl_regression_1 &lt;-
 .large[
 - Arguments `exponentiate` and `conf.level` from `tbl_regression()` are passed directly to `broom::tidy()`.
 
-- Logistic regression model with odds ratio header.
+- Logistic regression model with odds ratio header and footnote.
 
 - Reference groups added to the table.
 ]
@@ -483,6 +545,12 @@ tbl_regression_1 &lt;-
 .pull-right[
 &lt;p align="center"&gt;&lt;img src="images/tbl_regression_1.png" width=100%&gt;&lt;/p&gt;
 ]
+
+???
+
+- This table is ready for publication!
+
+- That is something no other package I know of can do
 
 ---
 # {gtsummary} summarize models with tbl_regression()
@@ -505,6 +573,10 @@ tbl_regression_2 &lt;-
 &lt;p align="center"&gt;&lt;img src="images/tbl_regression_2.png" width=100%&gt;&lt;/p&gt;
 ]
 
+???
+
+Thank you to Stefania for suggesting an improved name change for `add_global_p()`!
+
 ---
 # {gtsummary} summarize models with tbl_regression()
 
@@ -518,8 +590,7 @@ tbl_regression_3 &lt;-
   tbl_regression(exponentiate = TRUE)
 tbl_regression_4 &lt;-
 * tbl_merge(
-*   tbls = list(tbl_regression_1,
-*               tbl_regression_3),
+*   tbls = list(tbl_regression_1, tbl_regression_3),
 *   tab_spanner = c("Tumor Response", "Time to Death")
 * )
 ```
@@ -534,6 +605,11 @@ tbl_regression_4 &lt;-
 &lt;p align="center"&gt;&lt;img src="images/tbl_regression_4.png" width=100%&gt;&lt;/p&gt;
 ]
 
+???
+
+- side-by-side regression results is common in cancer research (e.g. time to recurrence, then time to death)
+
+- stacking two or more models is also possible
 ---
 # {gtsummary} summarize data with tbl_uvregression()
 
@@ -561,6 +637,10 @@ tbl_uvregression_1 &lt;-
 &lt;p align="center"&gt;&lt;img src="images/tbl_uvregression_1.png" width=100%&gt;&lt;/p&gt;
 ]
 
+???
+
+Tables of univariate results can be good for exploratory analysis
+
 ---
 # {gtsummary} summarize data with tbl_survival()
 
@@ -580,7 +660,7 @@ tbl_survival_1 &lt;-
 
 - Create table of estimates with `tbl_survival()`.
 
-- Can use this function to print survival quantiles, e.g. median survival.
+- Can use this function to print survival quantiles as well, e.g. median survival.
 ]
 ]
 .pull-right[
@@ -606,6 +686,17 @@ inline_text(tbl_regression_1, variable = "trt", level = "Placebo")
 - The pattern of what is reported can be modified with the `pattern = ` argument.  Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`.
 ]
 
+???
+
+- dsicuss importatnce of reproducible results
+
+- data is constantly updating
+
+- this functionality assures you won't miss updating a reported estimate in a document
+
+- for me, this is one the most powerful parts of the {gtsummary} package
+
+- something i've never seen in another package
 ---
 class: center
 # {gtsummary}
@@ -622,6 +713,80 @@ class: center
 
 &lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; source code for slides at &lt;a href="https://github.com/ddsjoberg/gt-and-gtsummary-presentation"&gt;github.com/ddsjoberg/gt-and-gtsummary-presentation&lt;/a&gt;
 ]
+
+???
+
+Go star {gtsummary} on GitHub...we're already to 50+!
+
+---
+# {gtsummary} Advanced
+
+{gtsummary} output is a list that prints as a {gt} table.
+
+
+```r
+names(tbl_summary_1)
+```
+
+```
+## [1] "gt_calls"   "table_body" "meta_data"  "inputs"     "call_list" 
+## [6] "by"         "df_by"
+```
+
+.pull-left[
+
+```r
+pluck(tbl_summary_1, "table_body") %&gt;% head()
+```
+
+```
+## # A tibble: 6 x 5
+##   variable row_type label          stat_1      stat_2     
+##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;      
+## 1 age      label    Age, yrs       47 (39, 58) 45 (36, 54)
+## 2 age      missing  Unknown        6           3          
+## 3 response label    Tumor Response 53 (51%)    30 (34%)   
+## 4 response missing  Unknown        4           5          
+## 5 grade    label    Grade          &lt;NA&gt;        &lt;NA&gt;       
+## 6 grade    level    I              38 (36%)    29 (31%)
+```
+]
+.pull-right[
+
+```r
+pluck(tbl_summary_1, "gt_calls") %&gt;% head()
+```
+
+```
+## $gt
+## gt(data = x$table_body)
+## 
+## $cols_label_label
+## cols_label(label = md('**Characteristic**'))
+## 
+## $cols_align
+## cols_align(align = 'center') %&gt;% cols_align(align = 'left', columns = vars(label))
+## 
+## $cols_hide
+## cols_hide(columns = vars(variable, row_type))
+## 
+## $fmt_missing
+## fmt_missing(columns = everything(), missing_text = '')
+## 
+## $tab_style_text_indent
+## tab_style(style = cells_styles(text_indent = px(10), text_align = 'left'),locations = cells_data(columns = vars(label),rows = row_type != 'label'))
+```
+]
+
+???
+
+If there is time, review the structure of a {gtsummary} object
+
+Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever teh object is printed.
+
+Understanding this structure will help you modify if you need.  If there is a {gt} call that formats in a way you don't like, convert your object with `as_gt()` and use the `omit =` argument to leave out the gt call you don't like.
+
+You can replace it with whatever you choose.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
