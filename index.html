@@ -32,11 +32,11 @@ background-size: contain
 # {gt} package
 
 ???
-- gt is the grammer of graphics
+- gt is the grammar of graphics
 
 - package from Rstudio
 
-- seeks to create a unifying codebase for HTML, PDF, and RTF otuput
+- seeks to create a unifying code base for HTML, PDF, and RTF output
 
 - HTML and PDF are great. RTF is getting close
 ---
@@ -48,7 +48,7 @@ background-size: contain
 
 ???
 
-- package has sets of functions for modifying each peice of a table
+- package has sets of functions for modifying each pace of a table
 
 - we'll review the most common/useful
 ---
@@ -90,7 +90,7 @@ gt_trial_info &lt;- tibble(
 ???
 - the most common and useful is gt()
 
-- gt() is the first function to run, required everytime
+- gt() is the first function to run, required every time
 ---
 # {gt} examples: formatting columns
 
@@ -140,7 +140,7 @@ gt_format &lt;-
 
 - we can add formatting, here we format columns with `fmt_number()`
 
-- we don't have to create character versions of our columns!  wodnerful!
+- we don't have to create character versions of our columns!  wonderful!
 ---
 # {gt} examples: formatting cells
 
@@ -383,7 +383,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 
 ???
 
-- discuss the glue pcakage and how it works and how it's utilized all over {gtsummary}.  Maybe even add a slide about it?
+- discuss the glue package and how it works and how it's utilized all over {gtsummary}.  Maybe even add a slide about it?
 
 - the defaults are in a word, perfect (for me), but you may want to change them
 
@@ -688,7 +688,7 @@ inline_text(tbl_regression_1, variable = "trt", level = "Placebo")
 
 ???
 
-- dsicuss importatnce of reproducible results
+- discuss importance of reproducible results
 
 - data is constantly updating
 
@@ -696,7 +696,7 @@ inline_text(tbl_regression_1, variable = "trt", level = "Placebo")
 
 - for me, this is one the most powerful parts of the {gtsummary} package
 
-- something i've never seen in another package
+- something I've never seen in another package
 ---
 class: center
 # {gtsummary}
@@ -782,7 +782,7 @@ pluck(tbl_summary_1, "gt_calls") %&gt;% head()
 
 If there is time, review the structure of a {gtsummary} object
 
-Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever teh object is printed.
+Essentially, what is going on is that the {gt} calls on the right are called on the table on the left whenever the object is printed.
 
 Understanding this structure will help you modify if you need.  If there is a {gt} call that formats in a way you don't like, convert your object with `as_gt()` and use the `omit =` argument to leave out the gt call you don't like.
 
