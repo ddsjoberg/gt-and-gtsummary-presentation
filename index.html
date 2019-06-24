@@ -52,6 +52,32 @@ background-size: contain
 
 - we'll review the most common/useful
 ---
+# {gt} installation
+
+.large[
+- {gt} is not yet released on CRAN.
+
+- Use the code below to install from GitHub.
+]
+
+```r
+remotes::install_github("rstudio/gt")
+```
+
+.large[
+- While you're at it, install {gtsummary} as well.
+]
+
+```r
+remotes::install_github("ddsjoberg/gtsummary")
+```
+
+.large[
+- There is a version of {gtsummary} on CRAN, but with limited functionality.
+
+- Will be released on CRAN after {gt} is released.
+]
+---
 # {gt} examples: the data
 
 .large[When used alone, the `gt()` function prints a data frame. But so much more is possible!]
@@ -59,8 +85,6 @@ background-size: contain
 .pull-left[
 
 ```r
-# remotes::install_github("rstudio/gt")
-# remotes::install_github("ddsjoberg/gtsummary")
 library(gt)
 # loading gtsummary for the data
 library(gtsummary)
@@ -69,28 +93,34 @@ gt_trial_head &lt;- head(trial) %&gt;%
 ```
 
 
-&lt;p align="center"&gt;&lt;img src="images/gt_trial_head.png" width=90%&gt;&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="images/gt_trial_head.png" width=98%&gt;&lt;/p&gt;
 ]
 
 .pull-right[
 
-```r
-gt_trial_info &lt;- tibble(
-  variable = names(trial),
-  class = map(variable, ~class(trial[[.x]])),
-  label = map(variable, ~attr(trial[[.x]], "label"))
-) %&gt;%
-* gt()
-```
 
 
-&lt;p align="center"&gt;&lt;img src="images/gt_trial_info.png" width=60%&gt;&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="images/gt_trial_info.png" width=85%&gt;&lt;/p&gt;
 ]
 
 ???
 - the most common and useful is gt()
 
 - gt() is the first function to run, required every time
+---
+# {gt} examples: the viewer
+
+.large[
+- {gt} tables print to the RStudio viewer when in the global environment.
+]
+&lt;p align="center"&gt;&lt;img src="images/gt_in_viewer.PNG" width=64%&gt;&lt;/p&gt;
+
+.large[
+- {gt} tables also print in R markdown documents (HTML, PDF, RTF), Shiny apps, etc.
+]
+
+???
+Note that Word Document is NOT an output type.  Word can, however, read RTF documents.
 ---
 # {gt} examples: formatting columns
 
@@ -119,7 +149,7 @@ gt_print &lt;-
 
 ```r
 gt_format &lt;-
-* gt(trial_summary) %&gt;%
+  gt(trial_summary) %&gt;%  
 * fmt_number(columns = vars(age),
 *            decimals = 0) %&gt;%
 * fmt_number(columns = vars(marker),
@@ -141,6 +171,9 @@ gt_format &lt;-
 - we can add formatting, here we format columns with `fmt_number()`
 
 - we don't have to create character versions of our columns!  wonderful!
+
+- use `vars()` because we can seletct mutliple columns.  Also accepts character vector of names
+
 ---
 # {gt} examples: formatting cells
 
@@ -203,7 +236,7 @@ gt_cols &lt;- trial_summary %&gt;%
   fmt_number(columns = vars(age), decimals = 0) %&gt;% 
   fmt_number(columns = vars(marker), decimals = 2) %&gt;%
 * cols_label(trt = md("**Treatment**"), age = md("**Age**"), marker = md("**Marker**")) %&gt;%
-* tab_spanner(label = "Patient Characteristics",columns = vars(age, marker))
+* tab_spanner(label = "Patient Characteristics", columns = vars(age, marker))
 ```
 
 .pull-left[
@@ -361,6 +394,39 @@ tbl_summary_2 &lt;-
     - random effects for correlated data
 
 ---
+# {gtsummary} and the {glue} package
+
+.large[
+- {glue} is similar to paste (but I like it so much more).
+
+- To use, embed R expressions in curly braces. 
+
+- They are then evaluated and inserted into the argument string.
+]
+
+```r
+x = 1
+name = "Daniel"
+*glue::glue("{name} is number {x}")
+```
+
+```
+## Daniel is number 1
+```
+
+.large[
+- Expression can be complex.
+]
+
+```r
+*glue::glue("{name} is number {((x + 100) * 10) - 1009}")
+```
+
+```
+## Daniel is number 1
+```
+
+---
 # {gtsummary} summarize data with tbl_summary()
 
 .pull-left[
@@ -373,7 +439,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 *     all_continuous() ~ "{mean} ({sd})",
 *     all_categorical() ~ "{n} / {N} ({p}%)"
 *   ),
-*   label = list(vars(age) ~ "Patient Age")
+*   label = vars(age) ~ "Patient Age"
   ) %&gt;%
 * add_p(test = all_continuous() ~ "t.test")
 ```
@@ -444,7 +510,9 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 
 .large[Advanced Customization
 
-It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  Every function in {gt} is available to use with a {gtsummary} object.
+- It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  
+
+- Every function in {gt} is available to use with a {gtsummary} object.
 
 1. Create a {gtsummary} table.
 
@@ -465,7 +533,7 @@ It's natural a {gtsummary} package user would want to customize the aesthetics o
 tbl_summary_5 &lt;- sm_trial %&gt;%
   tbl_summary(by = "trt") %&gt;%
   # convert from gtsummary object to gt object
-  as_gt() %&gt;%
+* as_gt() %&gt;%
   # modify with gt functions
 * tab_spanner(
 *   label = "Randomization Group",
@@ -511,66 +579,92 @@ There is more that we are not covering here
 
 ---
 # {gtsummary} summarize models with tbl_regression()
-.pull-left[.large[
-- `tbl_regression()` accepts regression model object as inputs.
 
-- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and the resulting tables are gorgeous and customizable.
+### Raw Outupt
 
-- Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
-]]
+```r
+*m1 &lt;- glm(response ~ trt + grade + age, data = trial, family = binomial)
+m1
+```
 
-.pull-right[.large[
-- Regression models are summarized and include the reference rows for categorical variables.
+```
+## 
+## Call:  glm(formula = response ~ trt + grade + age, family = binomial, 
+##     data = trial)
+## 
+## Coefficients:
+## (Intercept)   trtPlacebo      gradeII     gradeIII          age  
+##    0.449477    -0.660514    -0.504973    -0.167732    -0.004199  
+## 
+## Degrees of Freedom: 181 Total (i.e. Null);  177 Residual
+##   (18 observations deleted due to missingness)
+## Null Deviance:	    249.1 
+## Residual Deviance: 242.8 	AIC: 252.8
+```
 
-- Resulting tables can be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  
-
-- Tables can also be stacked on top of one another.
-]]
-
-???
-
-- build the regression model on your own....we are not in the business of mode estimation or checking
-
-- let's review some examples with code
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-.pull-left[
+### {broom} Outupt
 
 ```r
-tbl_regression_1 &lt;-
-  glm(response ~ trt + grade + age, 
-      data = trial, family = binomial) %&gt;%
-* tbl_regression(exponentiate = TRUE)
+*broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE)
 ```
 
-.large[
-- Arguments `exponentiate` and `conf.level` from `tbl_regression()` are passed directly to `broom::tidy()`.
+```
+## # A tibble: 5 x 7
+##   term        estimate std.error statistic p.value conf.low conf.high
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    1.57     0.565      0.796  0.426     0.520     4.81 
+## 2 trtPlacebo     0.517    0.309     -2.14   0.0324    0.280     0.941
+## 3 gradeII        0.604    0.390     -1.30   0.195     0.279     1.29 
+## 4 gradeIII       0.846    0.369     -0.455  0.649     0.409     1.74 
+## 5 age            0.996    0.0106    -0.395  0.693     0.975     1.02
+```
 
-- Logistic regression model with odds ratio header and footnote.
+---
+# {gtsummary} summarize models with tbl_regression()
+
+### {gtsummary} Outupt
+
+```r
+*tbl_regression_1 &lt;- tbl_regression(m1, exponentiate = TRUE)
+```
+
+
+.pull-left[.large[
+- `tbl_regression()` accepts regression model object as inputs.
 
 - Reference groups added to the table.
-]
-]
+
+- Logistic regression model with odds ratio header and footnote.
+]]
+
 .pull-right[
-&lt;p align="center"&gt;&lt;img src="images/tbl_regression_1.png" width=100%&gt;&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="images/tbl_regression_1.png" width=90%&gt;&lt;/p&gt;
 ]
-
 ???
-
 - This table is ready for publication!
 
 - That is something no other package I know of can do
 
+- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and the resulting tables are gorgeous and customizable.
+
+- Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
+
+- Resulting tables can be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  
+
+- Tables can also be stacked on top of one another.
+
+- build the regression model on your own....we are not in the business of model estimation or checking
+
 ---
 # {gtsummary} summarize models with tbl_regression()
 
 .pull-left[
 
 ```r
-tbl_regression_2 &lt;-
-  glm(response ~ trt + grade + age, 
-      data = trial, family = binomial) %&gt;%
+tbl_regression_2 &lt;- m1 %&gt;%
   tbl_regression(exponentiate = TRUE) %&gt;%
 * add_global_p()
 ```
@@ -653,15 +747,37 @@ Tables of univariate results can be good for exploratory analysis
 
 ---
 # {gtsummary} summarize data with tbl_survival()
+.pull-left[
+
+```r
+*fit1 &lt;- survfit(Surv(ttdeath, death) ~ trt,
+*               data = trial)
+
+survminer::ggsurvplot(
+  fit = fit1, 
+  xlab = "Months",
+  ylab = "Overall survival probability",
+  legend.title = "Treatment Group",
+  legend.labs = c("Drug", "Placebo"),
+  break.x.by = 6, 
+  censor = FALSE,
+  risk.table = TRUE,
+  risk.table.y.text = FALSE
+)
+```
+]
+
+.pull-right[
+![](index_files/figure-html/unnamed-chunk-44-1.png)&lt;!-- --&gt;
+]
+---
+# {gtsummary} summarize data with tbl_survival()
 
 .pull-left[
 
 ```r
-fit1 &lt;- survfit(Surv(ttdeath, death) ~ trt, 
-                data = trial)
-tbl_survival_1 &lt;-
-* tbl_survival(fit1,
-*              times = c(12, 24),
+tbl_survival_1 &lt;- fit1 %&gt;%
+* tbl_survival(times = c(12, 24),
 *              label = "{time} Month")
 ```
 

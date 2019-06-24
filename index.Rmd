@@ -51,14 +51,36 @@ background-size: contain
 
 - we'll review the most common/useful
 ---
+# {gt} installation
+
+.large[
+- {gt} is not yet released on CRAN.
+
+- Use the code below to install from GitHub.
+]
+```{r, eval=FALSE}
+remotes::install_github("rstudio/gt")
+```
+
+.large[
+- While you're at it, install {gtsummary} as well.
+]
+```{r, eval=FALSE}
+remotes::install_github("ddsjoberg/gtsummary")
+```
+
+.large[
+- There is a version of {gtsummary} on CRAN, but with limited functionality.
+
+- Will be released on CRAN after {gt} is released.
+]
+---
 # {gt} examples: the data
 
 .large[When used alone, the `gt()` function prints a data frame. But so much more is possible!]
 
 .pull-left[
 ```{r, results=FALSE}
-# remotes::install_github("rstudio/gt")
-# remotes::install_github("ddsjoberg/gtsummary")
 library(gt)
 # loading gtsummary for the data
 library(gtsummary)
@@ -66,14 +88,14 @@ gt_trial_head <- head(trial) %>%
   gt() #<<
 ```
 ```{r, include=FALSE}
-gtsave(gt_trial_head, "images/gt_trial_head.png")
+# gtsave(gt_trial_head, "images/gt_trial_head.png")
 ```
 
-<p align="center"><img src="images/gt_trial_head.png" width=90%></p>
+<p align="center"><img src="images/gt_trial_head.png" width=98%></p>
 ]
 
 .pull-right[
-```{r, results=FALSE}
+```{r, results=FALSE, echo=FALSE}
 gt_trial_info <- tibble(
   variable = names(trial),
   class = map(variable, ~class(trial[[.x]])),
@@ -82,16 +104,30 @@ gt_trial_info <- tibble(
   gt() #<<
 ```
 ```{r, include=FALSE}
-gtsave(gt_trial_info, "images/gt_trial_info.png")
+# gtsave(gt_trial_info, "images/gt_trial_info.png")
 ```
 
-<p align="center"><img src="images/gt_trial_info.png" width=60%></p>
+<p align="center"><img src="images/gt_trial_info.png" width=85%></p>
 ]
 
 ???
 - the most common and useful is gt()
 
 - gt() is the first function to run, required every time
+---
+# {gt} examples: the viewer
+
+.large[
+- {gt} tables print to the RStudio viewer when in the global environment.
+]
+<p align="center"><img src="images/gt_in_viewer.PNG" width=64%></p>
+
+.large[
+- {gt} tables also print in R markdown documents (HTML, PDF, RTF), Shiny apps, etc.
+]
+
+???
+Note that Word Document is NOT an output type.  Word can, however, read RTF documents.
 ---
 # {gt} examples: formatting columns
 
@@ -108,7 +144,7 @@ gt_print <-
   gt(trial_summary) #<<
 ```
 ```{r, include=FALSE}
-gtsave(gt_print, "images/gt_print.png")
+# gtsave(gt_print, "images/gt_print.png")
 ```
 
 <p align="center"><img src="images/gt_print.png" width=64%></p>
@@ -119,14 +155,14 @@ gtsave(gt_print, "images/gt_print.png")
 
 ```{r}
 gt_format <-
-  gt(trial_summary) %>%  #<<
-  fmt_number(columns = vars(age),    #<<
+  gt(trial_summary) %>%  
+  fmt_number(columns = vars(age), #<<
              decimals = 0) %>%    #<<
   fmt_number(columns = vars(marker),    #<<
              decimals = 2)    #<<
 ```
 ```{r, include=FALSE}
-gtsave(gt_format, "images/gt_format.png")
+# gtsave(gt_format, "images/gt_format.png")
 ```
 
 <img src="images/gt_format.png" width=50%></p>
@@ -143,6 +179,9 @@ gtsave(gt_format, "images/gt_format.png")
 - we can add formatting, here we format columns with `fmt_number()`
 
 - we don't have to create character versions of our columns!  wonderful!
+
+- use `vars()` because we can seletct mutliple columns.  Also accepts character vector of names
+
 ---
 # {gt} examples: formatting cells
 
@@ -154,7 +193,7 @@ gt_fmt_cell <- trial_summary %>%
   fmt_number(columns = vars(mean), rows = variable == "marker", decimals = 2) #<<
 ```
 ```{r, include=FALSE}
-gtsave(gt_fmt_cell, "images/gt_fmt_cell.png")
+# gtsave(gt_fmt_cell, "images/gt_fmt_cell.png")
 ```
 .pull-left[
 <p align="center"><img src="images/gt_fmt_cell.png" width=75%></p>
@@ -185,7 +224,7 @@ gt_group <- trial_summary %>%
   fmt_number(columns = vars(mean), rows = variable == "marker", decimals = 2)
 ```
 ```{r, include=FALSE}
-gtsave(gt_group, "images/gt_group.png")
+# gtsave(gt_group, "images/gt_group.png")
 ```
 .pull-left[
 <p align="center"><img src="images/gt_group.png" width=35%></p>
@@ -206,10 +245,10 @@ gt_cols <- trial_summary %>%
   fmt_number(columns = vars(age), decimals = 0) %>% 
   fmt_number(columns = vars(marker), decimals = 2) %>%
   cols_label(trt = md("**Treatment**"), age = md("**Age**"), marker = md("**Marker**")) %>% #<<
-  tab_spanner(label = "Patient Characteristics",columns = vars(age, marker)) #<<
+  tab_spanner(label = "Patient Characteristics", columns = vars(age, marker)) #<<
 ```
 ```{r, include=FALSE}
-gtsave(gt_cols, "images/gt_cols.png")
+# gtsave(gt_cols, "images/gt_cols.png")
 ```
 .pull-left[
 <p align="center"><img src="images/gt_cols.png" width=95%></p>
@@ -237,7 +276,7 @@ gt_title_footnote <- trial_summary %>%
                locations = cells_column_labels(columns = vars(age, marker)))   #<<
 ```
 ```{r, include=FALSE}
-gtsave(gt_title_footnote, filename = "images/gt_title_footnote.png")
+# gtsave(gt_title_footnote, filename = "images/gt_title_footnote.png")
 ```
 .pull-left[
 <p align="center"><img src="images/gt_title_footnote.png" width=70%></p>
@@ -335,7 +374,7 @@ tbl_summary_1 <-
   tbl_summary(sm_trial, by = "trt") #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_summary_1 %>% as_gt(), filename = "images/tbl_summary_1.png")
+# gtsave(tbl_summary_1 %>% as_gt(), filename = "images/tbl_summary_1.png")
 ```
 .large[
 - Default statistics are median (IQR) for continuous variables, and n (percent) for categorical data.
@@ -365,7 +404,7 @@ tbl_summary_2 <-
   add_p() #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_summary_2 %>% as_gt(), filename = "images/tbl_summary_2.png")
+# gtsave(tbl_summary_2 %>% as_gt(), filename = "images/tbl_summary_2.png")
 ```
 .large[
 - To compare values across two or more groups, use the `add_p()` function.
@@ -388,6 +427,29 @@ gtsave(tbl_summary_2 %>% as_gt(), filename = "images/tbl_summary_2.png")
     - random effects for correlated data
 
 ---
+# {gtsummary} and the {glue} package
+
+.large[
+- {glue} is similar to paste (but I like it so much more).
+
+- To use, embed R expressions in curly braces. 
+
+- They are then evaluated and inserted into the argument string.
+]
+```{r}
+x = 1
+name = "Daniel"
+glue::glue("{name} is number {x}") #<<
+```
+
+.large[
+- Expression can be complex.
+]
+```{r}
+glue::glue("{name} is number {((x + 100) * 10) - 1009}") #<<
+```
+
+---
 # {gtsummary} summarize data with tbl_summary()
 
 .pull-left[
@@ -399,12 +461,12 @@ tbl_summary_3 <- sm_trial %>%
       all_continuous() ~ "{mean} ({sd})", #<<
       all_categorical() ~ "{n} / {N} ({p}%)" #<<
     ), #<<
-    label = list(vars(age) ~ "Patient Age") #<<
+    label = vars(age) ~ "Patient Age" #<<
   ) %>%
   add_p(test = all_continuous() ~ "t.test") #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_summary_3 %>% as_gt(), filename = "images/tbl_summary_3.png")
+# gtsave(tbl_summary_3 %>% as_gt(), filename = "images/tbl_summary_3.png")
 ```
 .large[
 - Report mean and standard deviation for continuous variables.
@@ -446,7 +508,7 @@ tbl_summary_4 <- sm_trial %>%
   add_stat_label()  #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_summary_4 %>% as_gt(), filename = "images/tbl_summary_4.png")
+# gtsave(tbl_summary_4 %>% as_gt(), filename = "images/tbl_summary_4.png")
 ```
 .large[
 - Report all levels for the response variable.
@@ -473,7 +535,9 @@ gtsave(tbl_summary_4 %>% as_gt(), filename = "images/tbl_summary_4.png")
 
 .large[Advanced Customization
 
-It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  Every function in {gt} is available to use with a {gtsummary} object.
+- It's natural a {gtsummary} package user would want to customize the aesthetics of the table with one or more of the many {gt} functions available.  
+
+- Every function in {gt} is available to use with a {gtsummary} object.
 
 1. Create a {gtsummary} table.
 
@@ -493,7 +557,7 @@ It's natural a {gtsummary} package user would want to customize the aesthetics o
 tbl_summary_5 <- sm_trial %>%
   tbl_summary(by = "trt") %>%
   # convert from gtsummary object to gt object
-  as_gt() %>%
+  as_gt() %>% #<<
   # modify with gt functions
   tab_spanner(  #<<
     label = "Randomization Group",   #<<
@@ -501,7 +565,7 @@ tbl_summary_5 <- sm_trial %>%
   )  #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_summary_5, filename = "images/tbl_summary_5.png")
+# gtsave(tbl_summary_5, filename = "images/tbl_summary_5.png")
 ```
 
 .footnote[More on this in the `tbl_summary()` vignette]
@@ -541,71 +605,69 @@ There is more that we are not covering here
 
 ---
 # {gtsummary} summarize models with tbl_regression()
-.pull-left[.large[
-- `tbl_regression()` accepts regression model object as inputs.
 
-- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and the resulting tables are gorgeous and customizable.
+### Raw Outupt
+```{r}
+m1 <- glm(response ~ trt + grade + age, data = trial, family = binomial) #<<
+m1
+```
 
-- Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
-]]
-
-.pull-right[.large[
-- Regression models are summarized and include the reference rows for categorical variables.
-
-- Resulting tables can be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  
-
-- Tables can also be stacked on top of one another.
-]]
-
-???
-
-- build the regression model on your own....we are not in the business of mode estimation or checking
-
-- let's review some examples with code
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-.pull-left[
+### {broom} Outupt
+```{r}
+broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE) #<<
+```
+
+---
+# {gtsummary} summarize models with tbl_regression()
+
+### {gtsummary} Outupt
 ```{r, results = FALSE}
-tbl_regression_1 <-
-  glm(response ~ trt + grade + age, 
-      data = trial, family = binomial) %>%
-  tbl_regression(exponentiate = TRUE) #<<
+tbl_regression_1 <- tbl_regression(m1, exponentiate = TRUE) #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_regression_1 %>% as_gt(), filename = "images/tbl_regression_1.png")
+# gtsave(tbl_regression_1 %>% as_gt(), filename = "images/tbl_regression_1.png")
 ```
-.large[
-- Arguments `exponentiate` and `conf.level` from `tbl_regression()` are passed directly to `broom::tidy()`.
 
-- Logistic regression model with odds ratio header and footnote.
+.pull-left[.large[
+- `tbl_regression()` accepts regression model object as inputs.
 
 - Reference groups added to the table.
-]
-]
+
+- Logistic regression model with odds ratio header and footnote.
+]]
+
 .pull-right[
-<p align="center"><img src="images/tbl_regression_1.png" width=100%></p>
+<p align="center"><img src="images/tbl_regression_1.png" width=90%></p>
 ]
-
 ???
-
 - This table is ready for publication!
 
 - That is something no other package I know of can do
 
+- The back end for the function is {broom} and {gt}, meaning that there is broad support for most regression model types, and the resulting tables are gorgeous and customizable.
+
+- Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
+
+- Resulting tables can be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  
+
+- Tables can also be stacked on top of one another.
+
+- build the regression model on your own....we are not in the business of model estimation or checking
+
 ---
 # {gtsummary} summarize models with tbl_regression()
 
 .pull-left[
 ```{r, results = FALSE}
-tbl_regression_2 <-
-  glm(response ~ trt + grade + age, 
-      data = trial, family = binomial) %>%
+tbl_regression_2 <- m1 %>%
   tbl_regression(exponentiate = TRUE) %>%
   add_global_p() #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_regression_2 %>% as_gt(), filename = "images/tbl_regression_2.png")
+# gtsave(tbl_regression_2 %>% as_gt(), filename = "images/tbl_regression_2.png")
 ```
 .large[
 - Replace individual p-values for categorical variables with global p-value for the entire variable.
@@ -636,7 +698,7 @@ tbl_regression_4 <-
   ) #<< 
 ```
 ```{r, include=FALSE}
-gtsave(tbl_regression_4 %>% as_gt(), filename = "images/tbl_regression_4.png")
+# gtsave(tbl_regression_4 %>% as_gt(), filename = "images/tbl_regression_4.png")
 ```
 .large[
 - Build Cox regression model with same predictors as previous model.
@@ -669,7 +731,7 @@ tbl_uvregression_1 <-
   ) #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_uvregression_1 %>% as_gt(), filename = "images/tbl_uvregression_1.png")
+# gtsave(tbl_uvregression_1 %>% as_gt(), filename = "images/tbl_uvregression_1.png")
 ```
 .large[
 - Table of univariate regression models.
@@ -687,18 +749,40 @@ Tables of univariate results can be good for exploratory analysis
 
 ---
 # {gtsummary} summarize data with tbl_survival()
+.pull-left[
+```{r, plot-last-surv, fig.show = 'hide'}
+fit1 <- survfit(Surv(ttdeath, death) ~ trt, #<<
+                data = trial) #<<
+
+survminer::ggsurvplot(
+  fit = fit1, 
+  xlab = "Months",
+  ylab = "Overall survival probability",
+  legend.title = "Treatment Group",
+  legend.labs = c("Drug", "Placebo"),
+  break.x.by = 6, 
+  censor = FALSE,
+  risk.table = TRUE,
+  risk.table.y.text = FALSE
+)
+```
+]
+
+.pull-right[
+```{r, ref.label = 'plot-last-surv', echo = FALSE}
+```
+]
+---
+# {gtsummary} summarize data with tbl_survival()
 
 .pull-left[
 ```{r, results = FALSE}
-fit1 <- survfit(Surv(ttdeath, death) ~ trt, 
-                data = trial)
-tbl_survival_1 <-
-  tbl_survival(fit1, #<<
-               times = c(12, 24), #<<
+tbl_survival_1 <- fit1 %>%
+  tbl_survival(times = c(12, 24), #<<
                label = "{time} Month") #<<
 ```
 ```{r, include=FALSE}
-gtsave(tbl_survival_1 %>% as_gt(), filename = "images/tbl_survival_1.png")
+# gtsave(tbl_survival_1 %>% as_gt(), filename = "images/tbl_survival_1.png")
 ```
 .large[
 - First, use `survfit()` to estimate survival times.
