@@ -809,7 +809,9 @@ inline_text(tbl_regression_1, variable = "trt", level = "Placebo")
 0.52 (95% CI 0.28, 0.94; p=0.032)
 ```
 
-- The pattern of what is reported can be modified with the `pattern = ` argument.  Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`.
+- The pattern of what is reported can be modified with the `pattern = ` argument.  
+
+- Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`.
 ]
 
 ???
@@ -847,8 +849,9 @@ Go star {gtsummary} on GitHub...we're already to 50+!
 ---
 # {gtsummary} Advanced
 
+.large[
 {gtsummary} output is a list that prints as a {gt} table.
-
+]
 
 ```r
 names(tbl_summary_1)
@@ -880,7 +883,7 @@ pluck(tbl_summary_1, "table_body") %&gt;% head()
 .pull-right[
 
 ```r
-pluck(tbl_summary_1, "gt_calls") %&gt;% head()
+pluck(tbl_summary_1, "gt_calls") %&gt;% head(n = 4)
 ```
 
 ```
@@ -895,12 +898,6 @@ pluck(tbl_summary_1, "gt_calls") %&gt;% head()
 ## 
 ## $cols_hide
 ## cols_hide(columns = vars(variable, row_type))
-## 
-## $fmt_missing
-## fmt_missing(columns = everything(), missing_text = '')
-## 
-## $tab_style_text_indent
-## tab_style(style = cells_styles(text_indent = px(10), text_align = 'left'),locations = cells_data(columns = vars(label),rows = row_type != 'label'))
 ```
 ]
 

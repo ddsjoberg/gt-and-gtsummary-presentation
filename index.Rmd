@@ -807,7 +807,9 @@ tbl_survival_1 <- fit1 %>%
 inline_text(tbl_regression_1, variable = "trt", level = "Placebo")
 ```
 
-- The pattern of what is reported can be modified with the `pattern = ` argument.  Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`.
+- The pattern of what is reported can be modified with the `pattern = ` argument.  
+
+- Default is `pattern = "{estimate} ({conf.level*100}% CI {conf.low}, {conf.high}; {p.value})"`.
 ]
 
 ???
@@ -845,8 +847,9 @@ Go star {gtsummary} on GitHub...we're already to 50+!
 ---
 # {gtsummary} Advanced
 
+.large[
 {gtsummary} output is a list that prints as a {gt} table.
-
+]
 ```{r}
 names(tbl_summary_1)
 ```
@@ -858,7 +861,7 @@ pluck(tbl_summary_1, "table_body") %>% head()
 ]
 .pull-right[
 ```{r}
-pluck(tbl_summary_1, "gt_calls") %>% head()
+pluck(tbl_summary_1, "gt_calls") %>% head(n = 4)
 ```
 ]
 
