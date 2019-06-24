@@ -72,7 +72,9 @@ remotes::install_github("ddsjoberg/gtsummary")
 .large[
 - There is a version of {gtsummary} on CRAN, but with limited functionality.
 
-- Will be released on CRAN after {gt} is released.
+- Use the version on GitHub (<a href="https://github.com/ddsjoberg/gtsummary">www.github.com/ddsjoberg/gtsummary</a>).
+
+- The full version of {gtsummary} be released on CRAN after {gt} is released.
 ]
 ---
 # {gt} examples: the data
