@@ -39,7 +39,7 @@ background-size: contain
 
 - HTML and PDF are great. RTF is getting close
 
-- {gt} is wonderful, and we ar doing the most brief introduction to it.  
+- {gt} is wonderful, and we are doing the most brief introduction to it.  
 
 -I recommend you look into further yourself
 ---
@@ -406,7 +406,7 @@ tbl_summary_1 <-
 
 - summarizing a data set is the MOST important analysis
 
-- summarize data first!  you will often catch mistakes.  Data is complicated, and udnerstanding it up front is important.
+- summarize data first!  you will often catch mistakes.  Data is complicated, and understanding it up front is important.
 
 - gtsummary is for presenting results, other great packages are available for summarizing data for your self (e.g. skimr)
 
@@ -660,7 +660,7 @@ broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE) #<<
 
 - all models returned with consistent format
 
-- but does not inlcude reference groups
+- but does not include reference groups
 
 - still needs additional modification before it can be presented
 ---
@@ -822,9 +822,9 @@ survminer::ggsurvplot(
 
 ???
 
-- You've probaby seen something like this before
+- You've probably seen something like this before
 
-- It's a Kaplan-Meier curve.  It shows the probabilty of being free from an event (e.g. cancer recurrence after treatment)
+- It's a Kaplan-Meier curve.  It shows the probability of being free from an event (e.g. cancer recurrence after treatment)
 
 - we can use gtsummary to grab estimates from curves like this
 ---
