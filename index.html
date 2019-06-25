@@ -39,6 +39,10 @@ background-size: contain
 - seeks to create a unifying code base for HTML, PDF, and RTF output
 
 - HTML and PDF are great. RTF is getting close
+
+- {gt} is wonderful, and we ar doing the most brief introduction to it.  
+
+-I recommend you look into further yourself
 ---
 # {gt} philosophy
 .large[
@@ -51,11 +55,13 @@ background-size: contain
 - package has sets of functions for modifying each piece of a table
 
 - we'll review the most common/useful
+
+- {gt} documentation is so organized and color coded.  it's easy to find what you're looking for.
 ---
 # {gt} installation
 
 .large[
-- {gt} is not yet released on CRAN.
+- {gt} is not on CRAN.
 
 - Use the code below to install from GitHub.
 ]
@@ -128,7 +134,7 @@ Note that Word Document is NOT an output type.  Word can, however, read RTF docu
 
 
 ```r
-trial_summary &lt;- trial %&gt;% group_by(trt) %&gt;% summarise_at(vars(age, marker), mean, na.rm = TRUE)
+*trial_summary &lt;- trial %&gt;% group_by(trt) %&gt;% summarise_at(vars(age, marker), mean, na.rm = TRUE)
 ```
 
 .pull-left[
@@ -144,6 +150,8 @@ gt_print &lt;-
 
 &lt;p align="center"&gt;&lt;img src="images/gt_print.png" width=64%&gt;&lt;/p&gt;
 ]
+
+--
 
 .pull-right[
 ### Formatted Summary Statistics
@@ -170,7 +178,7 @@ gt_format &lt;-
 
 - the raw print is not pretty
 
-- we can add formatting, here we format columns with `fmt_number()`
+- we can add formatting, here we round columns with `fmt_number()`
 
 - we don't have to create character versions of our columns!  wonderful!
 
@@ -205,6 +213,8 @@ gt_fmt_cell &lt;- trial_summary %&gt;%
 - the `fmt_number()` function can also used to format a single cell
 
 - lots of formatting functions to choose from
+
+- write your own formatting functions
 
 ---
 # {gt} examples: grouping data
@@ -294,7 +304,7 @@ background-size: contain
 
 ???
 
-Still working on the hex sticker!
+- Still working on the hex sticker!
 ---
 # {gtsummary} introduction
 
@@ -362,7 +372,15 @@ tbl_summary_1 &lt;-
 
 ???
 
+- summarizing a data set is the MOST important analysis
+
+- summarize data first!  you will often catch mistakes.  Data is complicated, and udnerstanding it up front is important.
+
+- gtsummary is for presenting results, other great packages are available for summarizing data for your self (e.g. skimr)
+
 - just one line of code
+
+- all functions beginning with `tbl_*` create a new tables
 
 - this is how i used the function 95% percent of the time...so easy
 
@@ -393,14 +411,15 @@ tbl_summary_2 &lt;-
 
 - add_p account for another 4% of how I use the function
 
+- all functions beginning with `tbl_*` create a new tables, and `add_*` add information to an existing table
+
 - explain the test defaults
 
-    - other options
     - 2 or more groups
     - random effects for correlated data
 
 ---
-# {gtsummary} and the {glue} package
+# {gtsummary} and the {glue} package: an aside
 
 .large[
 - {glue} is similar to paste (but I like it so much more).
@@ -445,7 +464,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 *     all_continuous() ~ "{mean} ({sd})",
 *     all_categorical() ~ "{n} / {N} ({p}%)"
 *   ),
-*   label = vars(age) ~ "Patient Age"
+*   label = "age" ~ "Patient Age"
   ) %&gt;%
 * add_p(test = all_continuous() ~ "t.test")
 ```
@@ -472,6 +491,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 
 - discuss the formula notation
     - it's like `case_when()`, condition/variable on LHS and result on RHS
+    - one formula doesn't need to be in a list, but more than one must be listed
 
 - the vignette has examples with more examples
 ---
@@ -497,6 +517,7 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 - Modify the default rounding for age.
 
 - Add column indicating statistics presented.
+    - footnote about stats performed is gone!
 ]
 ]
 .pull-right[
@@ -608,6 +629,13 @@ m1
 ## Residual Deviance: 242.8 	AIC: 252.8
 ```
 
+???
+
+- it's not pretty
+
+- most often I want the odds ratios from a logistic regression, not the betas
+
+- format from every type of model is different and difficult to work with
 ---
 # {gtsummary} summarize models with tbl_regression()
 
@@ -628,6 +656,15 @@ m1
 ## 5 age            0.996    0.0106    -0.395  0.693     0.975     1.02
 ```
 
+???
+
+- MUCH MUCH better!
+
+- all models returned with consistent format
+
+- but does not inlcude reference groups
+
+- still needs additional modification before it can be presented
 ---
 # {gtsummary} summarize models with tbl_regression()
 
@@ -650,7 +687,7 @@ m1
 &lt;p align="center"&gt;&lt;img src="images/tbl_regression_1.png" width=90%&gt;&lt;/p&gt;
 ]
 ???
-- This table is ready for publication!
+- This table is ready for publication in a single line of code!
 
 - That is something no other package I know of can do
 
@@ -720,6 +757,8 @@ tbl_regression_4 &lt;-
 - side-by-side regression results is common in cancer research (e.g. time to recurrence, then time to death)
 
 - stacking two or more models is also possible
+
+- easy to create custom tables that are formatted beautifully
 ---
 # {gtsummary} summarize data with tbl_uvregression()
 
@@ -749,7 +788,9 @@ tbl_uvregression_1 &lt;-
 
 ???
 
-Tables of univariate results can be good for exploratory analysis
+- Tables of univariate results can be good for exploratory analysis
+
+- also great with time-to-event endpoint when you cannot do a `tbl_summary()`
 
 ---
 # {gtsummary} summarize data with tbl_survival()
@@ -776,6 +817,14 @@ survminer::ggsurvplot(
 .pull-right[
 ![](index_files/figure-html/unnamed-chunk-44-1.png)&lt;!-- --&gt;
 ]
+
+???
+
+- You've probaby seen something like this before
+
+- It's a Kaplan-Meier curve.  It shows the probabilty of being free from an event (e.g. cancer recurrence after treatment)
+
+- we can use gtsummary to grab estimates from curves like this
 ---
 # {gtsummary} summarize data with tbl_survival()
 
