@@ -182,7 +182,7 @@ gt_format <-
 
 - we don't have to create character versions of our columns!  wonderful!
 
-- use `vars()` because we can seletct mutliple columns.  Also accepts character vector of names
+- use `vars()` because we can select multiple columns.  Also accepts character vector of names
 
 ---
 # {gt} examples: formatting cells
@@ -438,13 +438,13 @@ tbl_summary_2 <-
 .large[
 - {glue} is similar to paste (but I like it so much more).
 
-- To use, embed R expressions in curly braces. 
+- Embed R expressions in curly braces. 
 
 - They are then evaluated and inserted into the argument string.
 ]
 ```{r}
-x = 1
 name = "Daniel"
+x = 1
 glue::glue("{name} is number {x}") #<<
 ```
 
@@ -612,7 +612,7 @@ There is more that we are not covering here
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-### Raw Outupt
+### Raw Output
 ```{r}
 m1 <- glm(response ~ trt + grade + age, data = trial, family = binomial) #<<
 m1
@@ -621,7 +621,7 @@ m1
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-### {broom} Outupt
+### {broom} Output
 ```{r}
 broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE) #<<
 ```
@@ -629,7 +629,7 @@ broom::tidy(m1, conf.int = TRUE, exponentiate = TRUE) #<<
 ---
 # {gtsummary} summarize models with tbl_regression()
 
-### {gtsummary} Outupt
+### {gtsummary} Output
 ```{r, results = FALSE}
 tbl_regression_1 <- tbl_regression(m1, exponentiate = TRUE) #<<
 ```
