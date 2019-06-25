@@ -309,7 +309,7 @@ background-size: contain
 
 ---
 class: center
-background-image: url(images/gtsummary-HexSticker.png)
+background-image: url(images/gtsummary_logo1.png)
 background-size: contain
 
 # {gtsummary}
