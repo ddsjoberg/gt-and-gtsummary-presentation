@@ -32,9 +32,11 @@ background-size: contain
 # {gt} package
 
 ???
-- gt is the grammar of graphics
-
 - package from Rstudio
+
+- you may remmeber it from Stefania's review of the RStudio conference
+
+- gt is the grammar of tables
 
 - seeks to create a unifying code base for HTML, PDF, and RTF output
 
@@ -42,7 +44,7 @@ background-size: contain
 
 - {gt} is wonderful, and we are doing the most brief introduction to it.  
 
--I recommend you look into further yourself
+- I recommend you look into further yourself
 ---
 # {gt} philosophy
 .large[
@@ -56,7 +58,10 @@ background-size: contain
 
 - we'll review the most common/useful
 
-- {gt} documentation is so organized and color coded.  it's easy to find what you're looking for.
+- {gt} documentation is so organized and color coded.  
+
+- It's easy to find what you're looking for.
+
 ---
 # {gt} installation
 
@@ -104,6 +109,8 @@ gt_trial_head &lt;- head(trial) %&gt;%
 &lt;p align="center"&gt;&lt;img src="images/gt_trial_head.png" width=98%&gt;&lt;/p&gt;
 ]
 
+--
+
 .pull-right[
 
 
@@ -112,9 +119,15 @@ gt_trial_head &lt;- head(trial) %&gt;%
 ]
 
 ???
-- the most common and useful is gt()
+- the most common and useful is `gt()`
 
-- gt() is the first function to run, required every time
+- `gt()` is the first function to run, required every time
+
+- AFTER CLICK
+
+- Dataset contains different types of data
+
+- Data is labelled! (leads to nice labels be default)
 ---
 # {gt} examples: the viewer
 
@@ -128,7 +141,12 @@ gt_trial_head &lt;- head(trial) %&gt;%
 ]
 
 ???
-Note that Word Document is NOT an output type.  Word can, however, read RTF documents.
+- Word *.docx is NOT an output type.  
+
+- Word can, however, read RTF documents.
+
+- RTF is how SAS creates in highly customized output, for example
+
 ---
 # {gt} examples: formatting columns
 
@@ -160,10 +178,8 @@ gt_print &lt;-
 ```r
 gt_format &lt;-
   gt(trial_summary) %&gt;%  
-* fmt_number(columns = vars(age),
-*            decimals = 0) %&gt;%
-* fmt_number(columns = vars(marker),
-*            decimals = 2)
+* fmt_number(columns = vars(age), decimals = 0) %&gt;%
+* fmt_number(columns = "marker", decimals = 2)
 ```
 
 
@@ -178,11 +194,17 @@ gt_format &lt;-
 
 - the raw print is not pretty
 
+- AFTER CLICK
+
 - we can add formatting, here we round columns with `fmt_number()`
 
 - we don't have to create character versions of our columns!  wonderful!
 
-- use `vars()` because we can select multiple columns.  Also accepts character vector of names
+- use `vars()` because we can select multiple columns.  
+
+- Input allows ALL {tidyselect} functions.  
+
+- also accepts character vector of names
 
 ---
 # {gt} examples: formatting cells
@@ -192,8 +214,8 @@ gt_format &lt;-
 gt_fmt_cell &lt;- trial_summary %&gt;%
   gather("variable", "mean", -trt) %&gt;%
 * gt() %&gt;%
-* fmt_number(columns = vars(mean), rows = variable == "age", decimals = 0) %&gt;%
-* fmt_number(columns = vars(mean), rows = variable == "marker", decimals = 2)
+* fmt_number(columns = vars(mean), rows = (variable == "age"), decimals = 0) %&gt;%
+* fmt_number(columns = vars(mean), rows = (variable == "marker"), decimals = 2)
 ```
 
 .pull-left[
@@ -295,6 +317,9 @@ background-size: contain
 
 # much much more {gt} to learn
 
+???
+
+- color coded documentation
 ---
 class: center
 background-image: url(images/gtsummary_logo1.png)
@@ -305,6 +330,11 @@ background-size: contain
 ???
 
 - Still working on the hex sticker!
+
+- Font?
+
+- Bubble placement is so important
+
 ---
 # {gtsummary} introduction
 
@@ -328,9 +358,9 @@ background-size: contain
 
 - mskR and biostatR are both undergoing an uncoupling.
 
-- biostatR will comprise of these three packages
+- biostatR will comprise of three packages
 
-- biostatR won't fully undergo the uncoupling until {gt} is released (or their RTF output is improved)
+- biostatR won't fully undergo the uncoupling until {gt} is released on CRAN (or their RTF output is improved)
 ---
 # {gtsummary} summarize data with tbl_summary()
 
@@ -371,18 +401,21 @@ tbl_summary_1 &lt;-
 ]
 
 ???
+- Go slow here
 
 - summarizing a data set is the MOST important analysis
 
 - summarize data first!  you will often catch mistakes.  Data is complicated, and understanding it up front is important.
 
-- gtsummary is for presenting results, other great packages are available for summarizing data for your self (e.g. skimr)
+- Communicating a summary of the data ALONG with analytic results in necessary (others may catch mistakes you're not aware of)
+
+- {gtsummary} is for presenting results, other great packages are available for summarizing data for your self (e.g. skimr)
 
 - just one line of code
 
 - all functions beginning with `tbl_*` create a new tables
 
-- this is how i used the function 95% percent of the time...so easy
+- this is how I used the package 95% percent of the time...so easy
 
 - three types of data shown here (explain them)
 
@@ -409,7 +442,7 @@ tbl_summary_2 &lt;-
 
 ???
 
-- add_p account for another 4% of how I use the function
+- `add_p()` account for another 4% of how I use the function
 
 - all functions beginning with `tbl_*` create a new tables, and `add_*` add information to an existing table
 
@@ -451,6 +484,10 @@ x = 1
 ## Daniel is number 1
 ```
 
+???
+- an aside
+
+- glue is used in some {gtsummary} function arguments, also {gt}
 ---
 # {gtsummary} summarize data with tbl_summary()
 
@@ -483,9 +520,7 @@ tbl_summary_3 &lt;- sm_trial %&gt;%
 
 ???
 
-- discuss the glue package and how it works and how it's utilized all over {gtsummary}.  Maybe even add a slide about it?
-
-- the defaults are in a word, perfect (for me), but you may want to change them
+- defaults are great, let's change the default behavior
 
 - statistics can be changed to anything...literally any R function
 
@@ -512,12 +547,13 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 ```
 
 .large[
-- Report all levels for the response variable.
+- Report levels for the response variable.
 
 - Modify the default rounding for age.
 
-- Add column indicating statistics presented.
-    - footnote about stats performed is gone!
+- Add column of statistics presented.
+
+- Footnote about statistics is gone!
 ]
 ]
 .pull-right[
@@ -527,10 +563,11 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 ???
 
 - further discuss formula notation
+    - just like {gt} can use both select helpers OR characters vector of names
 
 - discuss digits and how it's used
 
-- discuss stat_label, and mention the footnote was omitted
+- discuss `stat_label = `, and mention the footnote was omitted
 
 ---
 # {gtsummary} summarize data with tbl_summary()
@@ -548,6 +585,9 @@ tbl_summary_4 &lt;- sm_trial %&gt;%
 1. Continue formatting as a {gt} table with any {gt} function.
 ]
 
+???
+
+Discuss `as_gt()` and how to use
 ---
 # {gtsummary} summarize data with tbl_summary()
 
@@ -569,7 +609,7 @@ tbl_summary_5 &lt;- sm_trial %&gt;%
 ```
 
 
-.footnote[More on this in the `tbl_summary()` vignette]
+.footnote[More on this in the `tbl_summary()` &lt;a href="http://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html#advanced-customization"&gt;vignette&lt;/a&gt;]
 ]
 .pull-right[
 &lt;p align="center"&gt;&lt;img src="images/tbl_summary_5.png" width=90%&gt;&lt;/p&gt;
@@ -695,10 +735,6 @@ m1
 
 - Common regression models, such as logistic regression and Cox regression, are automatically identified and the tables are created with appropriate headers. 
 
-- Resulting tables can be merged (i.e. side-by-side tables for models with the same predictors and different outcomes).  
-
-- Tables can also be stacked on top of one another.
-
 - build the regression model on your own....we are not in the business of model estimation or checking
 
 ---
@@ -790,7 +826,10 @@ tbl_uvregression_1 &lt;-
 
 - Tables of univariate results can be good for exploratory analysis
 
-- also great with time-to-event endpoint when you cannot do a `tbl_summary()`
+- Code is similar to {ggplot2} `geom_smooth()` and `stat_smooth()`
+
+- also great with time-to-event endpoint when you cannot do a `tbl_summary()` to get bivariate p-values
+
 
 ---
 # {gtsummary} summarize data with tbl_survival()
@@ -824,7 +863,7 @@ survminer::ggsurvplot(
 
 - It's a Kaplan-Meier curve.  It shows the probability of being free from an event (e.g. cancer recurrence after treatment)
 
-- we can use gtsummary to grab estimates from curves like this
+- we can use {gtsummary} to grab estimates from curves like this
 ---
 # {gtsummary} summarize data with tbl_survival()
 
@@ -888,7 +927,7 @@ class: center
 
 • Check out the package website for vignettes including detailed examples and explanations •
 
-&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gt} package &lt;a href="https://github.com/rstudio/gt"&gt;github.com/rstudio/gt&lt;/a&gt;
+&lt;img src = "images/open-book-white.png" width="2.4%" height="2.4%"&gt; {gtsummary} documentation &lt;a href="http://www.danieldsjoberg.com/gtsummary/"&gt;danieldsjoberg.com/gtsummary/&lt;/a&gt;
 
 &lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gtsummary} package &lt;a href="https://github.com/ddsjoberg/gtsummary"&gt;github.com/ddsjoberg/gtsummary&lt;/a&gt;
 
@@ -896,6 +935,8 @@ class: center
 
 &lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; source code for slides at &lt;a href="https://github.com/ddsjoberg/gt-and-gtsummary-presentation"&gt;github.com/ddsjoberg/gt-and-gtsummary-presentation&lt;/a&gt;
 ]
+
+&lt;img src = "images/github_icon.png" width="2.4%" height="2.4%"&gt; {gt} package &lt;a href="https://github.com/rstudio/gt"&gt;github.com/rstudio/gt&lt;/a&gt;
 
 ???
 
