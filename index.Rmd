@@ -932,9 +932,9 @@ class: center
 <img src = "images/slide_show_icon.png" width="2.4%" height="2.4%"> slides at <a href="http://www.danieldsjoberg.com/gt-and-gtsummary-presentation">danieldsjoberg.com/gt-and-gtsummary-presentation</a>  
 
 <img src = "images/github_icon.png" width="2.4%" height="2.4%"> source code for slides at <a href="https://github.com/ddsjoberg/gt-and-gtsummary-presentation">github.com/ddsjoberg/gt-and-gtsummary-presentation</a>
-]
 
 <img src = "images/github_icon.png" width="2.4%" height="2.4%"> {gt} package <a href="https://github.com/rstudio/gt">github.com/rstudio/gt</a>
+]
 
 ???
 
